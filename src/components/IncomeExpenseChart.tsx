@@ -25,7 +25,7 @@ export const IncomeExpenseChart = ({ transactions: externalTransactions, loading
 
   if (loading) {
     return (
-      <Card className="p-6 flex items-center justify-center h-[300px]">
+      <Card className="p-6 flex items-center justify-center h-full min-h-[300px]">
         <p className="text-muted-foreground">Loading chart data...</p>
       </Card>
     );
@@ -57,7 +57,7 @@ export const IncomeExpenseChart = ({ transactions: externalTransactions, loading
 
   if (!hasData) {
     return (
-      <Card className="p-6 flex items-center justify-center h-[300px]">
+      <Card className="p-6 flex items-center justify-center h-full min-h-[300px]">
         <p className="text-muted-foreground">No income or expense data available</p>
       </Card>
     );
@@ -67,7 +67,7 @@ export const IncomeExpenseChart = ({ transactions: externalTransactions, loading
   monthlyData.sort((a, b) => monthsOrder.indexOf(a.month) - monthsOrder.indexOf(b.month));
 
   return (
-    <Card className="p-6">
+    <Card className="p-6 h-full">
       <h3 className="text-lg font-semibold text-foreground mb-4">Income vs Expenses</h3>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={monthlyData}>

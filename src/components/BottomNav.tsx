@@ -2,12 +2,14 @@ import { Home, ArrowLeftRight, Wallet, CreditCard, User } from "lucide-react";
 import { NavLink } from "./NavLink";
 import { cn } from "@/lib/utils";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const BottomNav = () => {
   const location = useLocation();
+  const { user, loading } = useAuth();
 
-  // Hide nav on auth page
-  if (location.pathname === "/auth") {
+  // Hide nav when unauthenticated or loading
+  if (loading || !user || location.pathname === "/auth") {
     return null;
   }
 

@@ -21,7 +21,7 @@ const Auth = () => {
   const [signupConfirmVisible, setSignupConfirmVisible] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, user, loading: authLoading } = useAuth();
 
   const hasSqlInjectionPattern = (...values: string[]) => {
     const pattern = /['";`]|(--)/g;
@@ -30,10 +30,10 @@ const Auth = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
+    if (!authLoading && user) {
       navigate("/");
     }
-  }, [user, navigate]);
+  }, [user, authLoading, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

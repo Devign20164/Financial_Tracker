@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase, type Transaction } from '@/lib/supabase';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -7,8 +7,9 @@ export const useTransactions = () => {
     const [transactions, setTransactions] = useState<Transaction[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const channelRef = useRef<any>(null);
 
-    const fetchTransactions = useCallback(async () => {
+    const fetchTransactions = async () => {
         if (!user) {
             setTransactions([]);
             setLoading(false);
@@ -31,15 +32,22 @@ export const useTransactions = () => {
         } finally {
             setLoading(false);
         }
-    }, [user]);
+    };
 
     useEffect(() => {
         fetchTransactions();
 
         if (!user) return;
 
+        // Remove existing channel if any
+        if (channelRef.current) {
+            supabase.removeChannel(channelRef.current);
+        }
+
+        // Create a unique channel name to avoid conflicts
+        const channelName = `transactions_changes_${user.id}_${Date.now()}`;
         const channel = supabase
-            .channel('transactions_changes')
+            .channel(channelName)
             .on(
                 'postgres_changes',
                 {
@@ -48,16 +56,28 @@ export const useTransactions = () => {
                     table: 'transactions',
                     filter: `user_id=eq.${user.id}`,
                 },
-                () => {
+                (payload) => {
+                    console.log('Transaction change detected:', payload.eventType);
                     fetchTransactions();
                 }
             )
-            .subscribe();
+            .subscribe((status) => {
+                if (status === 'SUBSCRIBED') {
+                    console.log('Subscribed to transaction changes');
+                } else if (status === 'CHANNEL_ERROR') {
+                    console.error('Channel subscription error');
+                }
+            });
+
+        channelRef.current = channel;
 
         return () => {
-            supabase.removeChannel(channel);
+            if (channelRef.current) {
+                supabase.removeChannel(channelRef.current);
+                channelRef.current = null;
+            }
         };
-    }, [user, fetchTransactions]);
+    }, [user?.id]); // Only depend on user.id to avoid unnecessary recreations
 
     return { transactions, loading, error, refetch: fetchTransactions };
 };

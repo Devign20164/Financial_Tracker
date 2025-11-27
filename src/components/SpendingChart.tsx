@@ -150,7 +150,7 @@ export const SpendingChart = ({ transactions: externalTransactions, loading: ext
 
   if (transactionsLoading || categoriesLoading) {
     return (
-      <Card className="p-6 flex items-center justify-center h-[350px]">
+      <Card className="p-6 flex items-center justify-center h-full min-h-[350px]">
         <p className="text-muted-foreground">Loading chart data...</p>
       </Card>
     );
@@ -158,7 +158,7 @@ export const SpendingChart = ({ transactions: externalTransactions, loading: ext
 
   if (spendingByCategory.length === 0) {
     return (
-      <Card className="p-6 flex items-center justify-center h-[350px]">
+      <Card className="p-6 flex items-center justify-center h-full min-h-[350px]">
         <p className="text-muted-foreground">No expense data available</p>
       </Card>
     );
@@ -174,7 +174,7 @@ export const SpendingChart = ({ transactions: externalTransactions, loading: ext
     : null;
 
   return (
-    <Card className="relative p-6">
+    <Card className="relative p-6 h-full">
       {/* Selected percentage display in top right */}
       {selectedPercentage !== null && selectedCategory && (
         <div className="absolute top-4 right-4 z-20 px-4 py-2 rounded-xl border border-border bg-card shadow-lg">
