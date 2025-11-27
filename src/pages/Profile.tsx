@@ -188,9 +188,6 @@ const Profile = () => {
                   <p>{profile?.email || "user@example.com"}</p>
                 </div>
               </div>
-              <Button variant="secondary" className="bg-white text-primary hover:bg-white/90" onClick={() => navigate("/profile/edit")}>
-                Edit Profile
-              </Button>
             </div>
           </section>
 
@@ -232,10 +229,6 @@ const Profile = () => {
             <div className="space-y-6">
               <Card className="p-6 shadow-xl space-y-4">
                 <h3 className="text-lg font-semibold">Account</h3>
-                <Button variant="outline" className="w-full" onClick={() => navigate("/profile/security")}>
-                  <Shield className="h-4 w-4 mr-2" />
-                  Security Settings
-                </Button>
                 <Button variant="destructive" className="w-full" onClick={handleLogout}>
                   <LogOut className="h-4 w-4 mr-2" />
                   Logout
